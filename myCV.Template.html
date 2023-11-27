@@ -1,0 +1,48 @@
+# render.py
+import sys
+import os
+
+def render_template(template_file, output_file, substitutions):
+    try:
+        # Lire le contenu du fichier template
+        with open(template_file, 'r') as file:
+            content = file.read()
+
+        # Remplacer les motifs par les valeurs spécifiées dans settings.py
+        for key, value in substitutions.items():
+            content = content.replace("{" + key + "}", str(value))
+
+        # Écrire le résultat dans le fichier de sortie
+        with open(output_file, 'w') as file:
+            file.write(content)
+
+        print(f"Le fichier {output_file} a été généré avec succès.")
+
+    except FileNotFoundError:
+        print(f"Erreur: Le fichier {template_file} n'existe pas.")
+    except Exception as e:
+        print(f"Une erreur s'est produite: {e}")
+
+if __name__ == "__main__":
+    if len(sys.argv) != 2 or not sys.argv[1].endswith(".template"):
+        print("Usage: python render.py <file.template>")
+    else:
+        template_file = sys.argv[1]
+        output_file = os.path.splitext(template_file)[0] + ".html"
+
+        if template_file == "myCV.template":
+            substitutions = {
+                "title": "Mon CV",
+                "first_name": "DOUAMBA ADJA RASMATA",
+                "last_name": "",  # Vous pouvez ajouter un nom de famille si nécessaire
+                "age": 21,  # Modification de l'âge à 21 ans
+                "profession": "Développeur",  # Modification de la profession
+            }
+        else:
+            substitutions = {
+                "name": "DOUAMBA ADJA RASMATA",
+                "age": 21,
+                "profession": "Développeur",
+            }
+
+        render_template(template_file, output_file, substitutions)
